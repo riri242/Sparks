@@ -1,0 +1,548 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ======================================================
+   THEME TOKENS (HSL-based, scalable)
+   Note: @theme is optional; keep it only if your setup supports it.
+   ====================================================== */
+@theme {
+  --color-border: hsl(var(--border));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-card: hsl(var(--card));
+}
+
+/* ======================================================
+   BACKGROUNDS
+   ====================================================== */
+
+/* Calm static background: very light → soft blue (LIGHT) */
+.bg-soft-gradient {
+  background: linear-gradient(
+    180deg,
+    hsl(0 0% 98%) 0%,
+    hsl(210 40% 96%) 35%,
+    hsl(211 49% 88%) 65%,
+    hsl(215 67% 80%) 100%
+  );
+}
+
+/* Dark version of the same background */
+.dark .bg-soft-gradient {
+  background: linear-gradient(
+    180deg,
+    hsl(213 40% 10%) 0%,
+    hsl(213 38% 12%) 45%,
+    hsl(213 34% 16%) 100%
+  );
+}
+
+/* ======================================================
+   BASE THEME (LIGHT / DARK)
+   ====================================================== */
+@layer base {
+  :root {
+    /* PURE WHITE BASE (LIGHT MODE) */
+    --background: 0 0% 100%;
+    --foreground: 213 40% 19%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 213 40% 19%;
+
+    --border: 214 32% 91%;
+
+    --primary: 215 67% 31%;
+    --primary-foreground: 0 0% 100%;
+
+    --accent: 33 80% 69%;
+    --accent-foreground: 213 40% 19%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 213 25% 35%;
+
+    --input: 0 0% 100%;
+    --ring: 215 67% 31%;
+  }
+
+  .dark {
+    --background: 213 40% 10%;
+    --foreground: 37 30% 90%;
+
+    --card: 213 40% 14%;
+    --card-foreground: 37 30% 92%;
+
+    --border: 213 30% 32%;
+
+    --primary: 211 49% 70%;
+    --primary-foreground: 213 40% 15%;
+
+    --accent: 33 80% 69%;
+    --accent-foreground: 213 40% 15%;
+
+    --muted: 213 35% 18%;
+    --muted-foreground: 211 45% 80%;
+
+    --input: 213 35% 22%;
+    --ring: 211 49% 70%;
+  }
+
+  html { @apply scroll-smooth; }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    transition: background-color 0.3s ease, color 0.3s ease;
+    @apply font-sans;
+  }
+}
+
+/* Root must not constrain layout */
+#root {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+/* ======================================================
+   UTILITIES
+   ====================================================== */
+@layer utilities {
+  /* ---------- TEXT ---------- */
+  .text-glow {
+    text-shadow:
+      0 0 6px hsla(var(--primary), 0.35),
+      0 0 14px hsla(var(--primary), 0.22),
+      0 0 26px hsla(var(--accent), 0.12);
+  }
+
+  /* Navbar text: dark blue + hover glow */
+  .nav-text {
+    color: hsl(var(--foreground));
+    font-weight: 500;
+    transition:
+      color 0.25s ease,
+      text-shadow 0.25s ease;
+  }
+
+  .nav-text:hover {
+    color: hsl(var(--primary));
+    text-shadow:
+      0 0 6px hsla(var(--primary), 0.6),
+      0 0 14px hsla(var(--primary), 0.45),
+      0 0 28px hsla(var(--accent), 0.25);
+  }
+
+  /* ==================================================
+     GLASS ACCENT COMPONENTS (USE SPARINGLY)
+     ================================================== */
+
+  /* Ultra-light frosted glass (adapts to light/dark via tokens) */
+  .glass-frosty {
+    background: linear-gradient(
+      180deg,
+      hsla(var(--background), 0.65),
+      hsla(var(--background), 0.45)
+    );
+    backdrop-filter: blur(30px) saturate(140%);
+    -webkit-backdrop-filter: blur(30px) saturate(140%);
+  }
+
+  /* Optional soft glow (light, neutral) */
+  .glass-shadow {
+    box-shadow:
+      0 0 18px rgba(255, 250, 245, 0.22),
+      0 0 32px rgba(255, 250, 245, 0.12);
+  }
+
+  /* Glass Card */
+  .card-sparks {
+    @apply relative rounded-3xl
+      bg-white/20 backdrop-blur-xl
+      border border-white/30
+      shadow-[0_8px_32px_rgba(15,23,42,0.15)]
+      p-6 overflow-hidden
+      transition-all duration-300 ease-out
+      hover:shadow-[0_12px_48px_rgba(15,23,42,0.22)]
+      hover:scale-[1.02];
+  }
+
+  .card-sparks::before {
+    content: "";
+    @apply absolute inset-0 pointer-events-none;
+    background: radial-gradient(
+      circle at top left,
+      hsla(var(--primary), 0.25),
+      transparent 60%
+    );
+  }
+
+  .card-sparks:hover::before {
+    background: radial-gradient(
+      circle at center,
+      hsla(var(--primary), 0.45),
+      hsla(var(--accent), 0.25),
+      transparent 70%
+    );
+    transition: background 0.4s ease-out;
+  }
+
+  .card-sparks:hover {
+    @apply border-indigo-300/60;
+  }
+
+  .dark .card-sparks {
+    @apply bg-white/10 border-white/20;
+  }
+
+  .dark .card-sparks::before {
+    background: radial-gradient(
+      circle at top left,
+      hsla(var(--primary), 0.35),
+      transparent 70%
+    );
+  }
+
+  /* ==================================================
+     GLASS GHOST BUTTON ✅ UPDATED (OUTLINE IN LIGHT MODE)
+     ================================================== */
+
+  .btn-sparks-ghost {
+    @apply inline-flex items-center justify-center gap-2
+      px-6 py-3 rounded-full
+      font-medium text-base
+      backdrop-blur-md
+      transition-all duration-300 ease-out
+      hover:scale-[1.03]
+      active:scale-[0.97];
+
+    /* keep it glassy, but visible outline on light backgrounds */
+    color: hsl(var(--foreground));
+    background: linear-gradient(
+      180deg,
+      hsl(var(--card) / 0.4),
+      hsl(var(--card) / 0.22)
+    );
+    border: 1px solid hsl(var(--border) / 0.95);
+
+    /* subtle “glass” depth */
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      0 8px 22px rgba(15, 23, 42, 0.06);
+  }
+
+  .btn-sparks-ghost:hover {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--card) / 0.55),
+      hsl(var(--card) / 0.3)
+    );
+    border-color: hsl(var(--primary) / 0.45);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.65),
+      0 10px 26px rgba(15, 23, 42, 0.08);
+  }
+
+  .btn-sparks-ghost:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 4px hsl(var(--primary) / 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      0 10px 26px rgba(15, 23, 42, 0.08);
+  }
+
+  .dark .btn-sparks-ghost {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: hsl(var(--foreground));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 10px 28px rgba(0, 0, 0, 0.22);
+  }
+
+  .dark .btn-sparks-ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  /* ==================================================
+     SOLID SYSTEM COMPONENTS (DEFAULT)
+     ================================================== */
+
+  /* Primary Button */
+  .btn-sparks {
+    @apply inline-flex items-center justify-center gap-2
+      px-6 py-3 rounded-full font-medium
+      border transition duration-200 ease-out;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    border-color: hsl(var(--primary));
+    box-shadow:
+      0 1px 0 rgba(15, 23, 42, 0.08),
+      0 6px 18px rgba(15, 23, 42, 0.18);
+  }
+
+  .btn-sparks:hover {
+    background-color: hsl(var(--primary) / 0.92);
+    transform: translateY(-1px);
+  }
+
+  .btn-sparks:active {
+    transform: translateY(0);
+  }
+
+  .btn-sparks:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 4px hsl(var(--primary) / 0.25),
+      0 8px 24px rgba(15, 23, 42, 0.22);
+  }
+
+  .btn-sparks:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Inputs (token-based for light/dark) */
+  .input-sparks {
+    @apply w-full rounded-2xl px-4 py-3 text-base
+      border outline-none transition duration-200;
+    background-color: hsl(var(--card));
+    border-color: hsl(var(--border));
+    color: hsl(var(--foreground));
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+  }
+
+  .input-sparks::placeholder {
+    color: hsl(var(--foreground) / 0.45);
+  }
+
+  .input-sparks:hover {
+    border-color: hsl(var(--primary) / 0.35);
+  }
+
+  .input-sparks:focus {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.15);
+  }
+
+  /* Textarea (token-based for light/dark) */
+  .textarea-sparks {
+    @apply w-full rounded-2xl px-4 py-3 text-base
+      border outline-none resize-none transition duration-200;
+    background-color: hsl(var(--card));
+    border-color: hsl(var(--border));
+    color: hsl(var(--foreground));
+    min-height: 140px;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+  }
+
+  .textarea-sparks::placeholder {
+    color: hsl(var(--foreground) / 0.45);
+  }
+
+  .textarea-sparks:hover {
+    border-color: hsl(var(--primary) / 0.35);
+  }
+
+  .textarea-sparks:focus {
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.15);
+  }
+
+  /* Section Headers */
+  .section-header {
+    @apply w-full max-w-4xl mx-auto mb-8 text-center;
+  }
+
+  .section-eyebrow {
+    @apply inline-flex items-center gap-2
+      text-xs font-semibold uppercase tracking-[0.18em] mb-2;
+    color: hsl(var(--foreground) / 0.55);
+  }
+
+  .section-eyebrow::before {
+    content: "";
+    @apply inline-block h-[1px] w-6 rounded-full;
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-semibold;
+    color: hsl(var(--foreground));
+    letter-spacing: -0.02em;
+  }
+
+  .section-subtitle {
+    @apply mt-3 text-sm md:text-base mx-auto max-w-2xl;
+    color: hsl(var(--foreground) / 0.62);
+  }
+
+  /* Modal (solid) */
+  .modal-backdrop {
+    @apply fixed inset-0 z-40 flex items-center justify-center;
+    background: rgba(15, 23, 42, 0.45);
+  }
+
+  .modal-sparks {
+    @apply relative w-full max-w-lg rounded-3xl p-6 md:p-8 border;
+    background-color: hsl(var(--card));
+    border-color: hsl(var(--border));
+    box-shadow:
+      0 1px 0 rgba(15, 23, 42, 0.04),
+      0 30px 80px rgba(15, 23, 42, 0.3);
+  }
+
+  .modal-sparks-title {
+    @apply text-xl md:text-2xl font-semibold mb-2;
+    color: hsl(var(--foreground));
+  }
+
+  .modal-sparks-body {
+    @apply text-sm md:text-base mb-6;
+    color: hsl(var(--foreground) / 0.65);
+  }
+
+  /* Toast (solid) */
+  .toast-sparks-container {
+    @apply fixed z-50 right-4 bottom-4 flex flex-col gap-3;
+  }
+
+  .toast-sparks {
+    @apply flex items-center gap-3 rounded-2xl px-4 py-3 text-sm border;
+    background-color: hsl(var(--card));
+    border-color: hsl(var(--border));
+    color: hsl(var(--foreground));
+    box-shadow:
+      0 1px 0 rgba(15, 23, 42, 0.04),
+      0 12px 32px rgba(15, 23, 42, 0.12);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* ======================================================
+   ADVENTURE CARDS (PREMIUM)
+   ====================================================== */
+
+.adventure-outer {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(2, 6, 23, 0.08);
+  box-shadow:
+    0 32px 90px rgba(15, 23, 42, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.dark .adventure-outer {
+  background: hsl(var(--card) / 0.72);
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow:
+    0 38px 110px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.adventure-card {
+  position: relative;
+  border-radius: 1.75rem;
+  padding: 2.1rem 2rem;
+  
+  /* IMPORTANT: true white feel in light mode */
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(2, 6, 23, 0.08);
+
+  box-shadow:
+    0 14px 40px rgba(15, 23, 42, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.70);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  transition:
+    transform 280ms ease,
+    box-shadow 280ms ease,
+    border-color 280ms ease;
+}
+
+.adventure-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+
+  /* subtle top sheen */
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.70),
+    rgba(255, 255, 255, 0.00) 55%
+  );
+  opacity: 0.6;
+}
+
+.adventure-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+
+
+
+  opacity: 0.85;
+  transition: opacity 280ms ease;
+}
+
+
+.adventure-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(70, 130, 200, 0.45);
+
+  box-shadow:
+    0 22px 58px rgba(15, 23, 42, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.adventure-card:hover::after {
+  opacity: 1;
+}
+
+
+.dark .adventure-card {
+  background: hsl(var(--card) / 0.62);
+  border-color: rgba(255, 255, 255, 0.10);
+
+  box-shadow:
+    0 22px 70px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.dark .adventure-card::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.00) 55%
+  );
+  opacity: 0.9;
+}
+
+.dark .adventure-card::after {
+  background: radial-gradient(
+    1000px 380px at 50% 0%,
+    rgba(120, 190, 255, 0.18),
+    transparent 60%
+  );
+}
